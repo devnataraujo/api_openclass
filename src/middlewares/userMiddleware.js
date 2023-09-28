@@ -9,6 +9,18 @@ const validateBody = (request, response, next) => {
     next();
 };
 
+const validateFieldPassword = (request, response, next) => {
+    const {body} = request;
+
+    //validando o body
+    if(body.user_password == '' || body.user_password == undefined || body.user_password == null){
+        return response.status(400).json({message: "O campo user_password é obrigatório!"})
+    ;}
+
+    next();
+
+};
+
 const validateFieldEmail = (request, response, next) => {
     const {body} = request;
 
