@@ -1,14 +1,15 @@
 const connection = require('./connection');
 
 //funcao para buscar usuarios
-const buscarUsuarios = async () => { //criando uma funcao assincrona
-    const [users] = await connection.execute('SELECT * FROM user_data'); // executando a query e armazenando o primeiro array do retorno
-    return users; // retornando os objetos para o controller
+const buscarUsuario = async (info) => { //criando uma funcao assincrona
+    const { email, user_password } = info; //desestruturando o objeto info
+    const [usuario] = await connection.execute('select user_name, fk_user_type, flag_active FROM user_data WHERE email = ? and user_password = SHA2(?, 224);', [email, user_password]); //executando a query e armazenando o primeiro array do retorno
+    return usuario; //retornando o usuario
 };
 
 const cadastrarUsuario = async (infos) => {
     const { cpf_cnpj, email, user_password, user_name, phone, flag_active, fk_user_type } = infos; //desestruturando o objeto infos
-    const query = 'INSERT INTO user_data (cpf_cnpj, email, user_password, user_name, phone, flag_active, fk_user_type) VALUES (?, ?, ?, ?, ?, ?, ?)'; //criando a query
+    const query = 'INSERT INTO user_data (cpf_cnpj, email, user_password, user_name, phone, flag_active, fk_user_type) VALUES (?, ?, SHA2(?, 224), ?, ?, ?, ?)'; //criando a query
     const values = [cpf_cnpj, email, user_password, user_name, phone, flag_active, fk_user_type]; //criando o array de valores
     const [cadastrando] = await connection.execute(query, values); //executando a query e armazenando o primeiro array do retorno
     const id_user = cadastrando.insertId; //pegando o id do usuário cadastrado
@@ -37,7 +38,7 @@ const atualizarInfos = async(id, infos) => {
 };
 
 module.exports = {
-    buscarUsuarios,
+    buscarUsuario,
     cadastrarUsuario,
     deletarUsuario,
     //inativarUsuario,

@@ -1,13 +1,14 @@
 const userModel = require('../models/userModel');
 
-const buscarUsuarios = async (_request, response) => {
-    const users = await userModel.buscarUsuarios();
+const buscarUsuario = async (request, response) => {
+    const users = await userModel.buscarUsuario(request.body);
     return response.status(200).json(users);
 };
 
 const cadastrarUsuario = async (request, response) => {
     const cadastrando = await userModel.cadastrarUsuario(request.body);
-    return response.status(201).json(request.body);
+    //devolver o id do usuario cadastrado e dar request ao body
+    return response.status(200).json(cadastrando);
 };
 
 
@@ -35,7 +36,7 @@ const atualizarInfos = async (request, response) => {
 
 
 module.exports = {
-    buscarUsuarios,
+    buscarUsuario,
     cadastrarUsuario,
     deletarUsuario,
     //inativarUsuario,
