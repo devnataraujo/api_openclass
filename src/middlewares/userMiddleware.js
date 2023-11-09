@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 const validateBody = (request, response, next) => {
     const {body} = request;
 
@@ -9,21 +11,32 @@ const validateBody = (request, response, next) => {
     next();
 };
 
-const validateFieldEmail = (request, response, next) => {
-    const {body} = request;
 
-    //validando o body
-    if(body.email == '' || body.email == undefined || body.email == null){
-        return response.status(400).json({message: "O campo email é obrigatório!"})
-    ;}
+// Middleware para proteger rotas com JWT
+const verifyJWT = (request, response, next) => {
+    const token = request.headers.authorization;
 
-    next();
+    if(!token){
+        return response.status(401).json({message: "Token não encontrado!"});
+    }
 
-};
+    try{
+        const decoded = jwt.verify(token, process.env.JWT_KEY);
+        request.user = decoded;
+        next();
+    }
+    catch(error){
+        return response.status(401).json({message: "Token inválido!"});
+    }
+
+    
+}
+
+
 
 module.exports = {
     validateBody,
-    validateFieldEmail,
+    verifyJWT,
 };
 
 //deletar usuario 15

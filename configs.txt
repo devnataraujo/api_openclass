@@ -5,11 +5,11 @@ Instalacao
 -- npm install nodemon -D
 -- npm install dotenv
 -- npx eslint --init     
--- docker run --name mysql -e MYSQL_ROOT_PASSWORD=1234 -p 3306:3306 -d mysql
+-- docker run --name openclass -e MYSQL_ROOT_PASSWORD=1234 -p 3302:3306 -d mysql
 
 
 env.example
-PORT=
+PORT=3000
 DB_HOST=
 DB_USER=
 DB_PASS=
